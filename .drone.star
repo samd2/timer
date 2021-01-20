@@ -28,7 +28,7 @@ def main(ctx):
   linux_cxx("UBSAN=1 TOOLSET=clang CXXSTD=03,11,14,1z UBSA Job 11", "clang++", packages="", buildtype="boost", image=linuxglobalimage, environment={'UBSAN': '1', 'TOOLSET': 'clang', 'CXXSTD': '03,11,14,1z', 'UBSAN_OPTIONS': 'print_stacktrace=1', 'TRAVIS_COMPILER': 'clang++', 'DRONE_JOB_UUID': '17ba079149'}, globalenv=globalenv),
   linux_cxx("TOOLSET=clang CXXSTD=03,11,14,1z Job 12", "clang++", packages="libc++-dev", buildtype="boost", image="cppalliance/droneubuntu1404:1", environment={'TOOLSET': 'clang', 'CXXSTD': '03,11,14,1z', 'TRAVIS_COMPILER': 'clang++-libc++', 'DRONE_JOB_UUID': '7b52009b64'}, globalenv=globalenv),
   linux_cxx("UBSAN=1 TOOLSET=clang CXXSTD=03,11,14,1z UBSA Job 13", "clang++", packages="libc++-dev", buildtype="boost", image="cppalliance/droneubuntu1404:1", environment={'UBSAN': '1', 'TOOLSET': 'clang', 'CXXSTD': '03,11,14,1z', 'UBSAN_OPTIONS': 'print_stacktrace=1', 'TRAVIS_COMPILER': 'clang++-libc++', 'DRONE_JOB_UUID': 'bd307a3ec3'}, globalenv=globalenv),
-  osx_cxx("TOOLSET=clang CXXSTD=03,11,14,1z Job 14", "clang++", packages="", buildtype="boost", environment={'TOOLSET': 'clang', 'CXXSTD': '03,11,14,1z', 'DRONE_JOB_OS_NAME': 'osx', 'TRAVIS_COMPILER': 'clang++', 'DRONE_JOB_UUID': 'fa35e19212'}, globalenv=globalenv),
+  osx_cxx("TOOLSET=clang CXXSTD=03,11,14,1z Job 14", "clang++", packages="", buildtype="boost", environment={'TOOLSET': 'clang', 'CXXSTD': '03,11,14,1z', 'TRAVIS_COMPILER': 'clang++', 'DRONE_JOB_UUID': 'fa35e19212'}, globalenv=globalenv),
   linux_cxx("CMAKE=1 Job 15", "g++", packages="", buildtype="097d99d7d8-33ea46fe89", image=linuxglobalimage, environment={'CMAKE': '1', 'DRONE_JOB_UUID': 'f1abd67035'}, globalenv=globalenv),
   ]
 
