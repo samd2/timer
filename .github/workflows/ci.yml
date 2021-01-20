@@ -1,4 +1,4 @@
-name: CI
+name: Github Actions CI
 
 on:
   pull_request:
@@ -6,11 +6,12 @@ on:
     branches:
       - master
       - develop
+      - githubactions*
       - feature/**
+      - fix/**
+      - pr/**
 
-env:
-  LIBRARY: timer
-  UBSAN_OPTIONS: print_stacktrace=1
+
 
 jobs:
   posix:
@@ -18,169 +19,412 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - toolset: gcc-4.7
+          - name: "TOOLSET=gcc CXXSTD=03,11 Job 0"
+            buildtype: "boost"
+            packages: ""
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "gcc"
             cxxstd: "03,11"
-            os: ubuntu-16.04
-            install: g++-4.7
-          - toolset: gcc-4.8
+            travis_compiler: "g++"
+          - name: "TOOLSET=gcc CXXSTD=98,0x Job 1"
+            buildtype: "boost"
+            packages: "g++-4.4"
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "gcc"
+            cxxstd: "98,0x"
+            travis_compiler: "g++-4.4"
+          - name: "TOOLSET=gcc CXXSTD=03,0x Job 2"
+            buildtype: "boost"
+            packages: "g++-4.6"
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "gcc"
+            cxxstd: "03,0x"
+            travis_compiler: "g++-4.6"
+          - name: "TOOLSET=gcc CXXSTD=03,11 Job 3"
+            buildtype: "boost"
+            packages: "g++-4.8"
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "gcc"
             cxxstd: "03,11"
-            os: ubuntu-16.04
-            install: g++-4.8
-          - toolset: gcc-4.9
-            cxxstd: "03,11"
-            os: ubuntu-16.04
-            install: g++-4.9
-          - toolset: gcc-5
+            travis_compiler: "g++-4.8"
+          - name: "TOOLSET=gcc CXXSTD=03,11,14,1z Job 4"
+            buildtype: "boost"
+            packages: "g++-5"
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "gcc"
             cxxstd: "03,11,14,1z"
-            os: ubuntu-16.04
-          - toolset: gcc-6
+            travis_compiler: "g++-5"
+          - name: "TOOLSET=gcc CXXSTD=03,11,14,1z Job 5"
+            buildtype: "boost"
+            packages: "g++-6"
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "gcc"
             cxxstd: "03,11,14,1z"
-            os: ubuntu-16.04
-            install: g++-6
-          - toolset: gcc-7
+            travis_compiler: "g++-6"
+          - name: "TOOLSET=gcc CXXSTD=03,11,14,17 Job 6"
+            buildtype: "boost"
+            packages: "g++-7"
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "gcc"
             cxxstd: "03,11,14,17"
-            os: ubuntu-18.04
-          - toolset: gcc-8
+            travis_compiler: "g++-7"
+          - name: "TOOLSET=gcc CXXSTD=03,11,14,17,2a Job 7"
+            buildtype: "boost"
+            packages: "g++-8"
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "gcc"
             cxxstd: "03,11,14,17,2a"
-            os: ubuntu-18.04
-          - toolset: gcc-9
+            travis_compiler: "g++-8"
+          - name: "TOOLSET=gcc CXXSTD=03,11,14,17,2a Job 8"
+            buildtype: "boost"
+            packages: "g++-9"
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "gcc"
             cxxstd: "03,11,14,17,2a"
-            os: ubuntu-18.04
-          - toolset: gcc-10
+            travis_compiler: "g++-9"
+          - name: "UBSAN=1 TOOLSET=gcc CXXSTD=03,11,14,17,2a UBS Job 9"
+            buildtype: "boost"
+            packages: "g++-9"
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            ubsan: "1"
+            toolset: "gcc"
             cxxstd: "03,11,14,17,2a"
-            os: ubuntu-18.04
-          - toolset: clang
-            compiler: clang++-3.5
-            cxxstd: "03,11,14"
-            os: ubuntu-16.04
-            install: clang-3.5
-          - toolset: clang
-            compiler: clang++-3.6
-            cxxstd: "03,11,14"
-            os: ubuntu-16.04
-            install: clang-3.6
-          - toolset: clang
-            compiler: clang++-3.7
-            cxxstd: "03,11,14"
-            os: ubuntu-16.04
-            install: clang-3.7
-          - toolset: clang
-            compiler: clang++-3.8
-            cxxstd: "03,11,14"
-            os: ubuntu-16.04
-            install: clang-3.8
-          - toolset: clang
-            compiler: clang++-3.9
-            cxxstd: "03,11,14"
-            os: ubuntu-16.04
-            install: clang-3.9
-          - toolset: clang
-            compiler: clang++-4.0
-            cxxstd: "03,11,14"
-            os: ubuntu-16.04
-            install: clang-4.0
-          - toolset: clang
-            compiler: clang++-5.0
+            ubsan_options: "print_stacktrace=1"
+            linkflags: "-fuse-ld=gold"
+            travis_compiler: "g++-9"
+          - name: "TOOLSET=clang CXXSTD=03,11,14,1z Job 10"
+            buildtype: "boost"
+            packages: ""
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "clang++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            toolset: "clang"
             cxxstd: "03,11,14,1z"
-            os: ubuntu-16.04
-            install: clang-5.0
-          - toolset: clang
-            compiler: clang++-6.0
-            cxxstd: "03,11,14,17"
-            os: ubuntu-18.04
-          - toolset: clang
-            compiler: clang++-7
-            cxxstd: "03,11,14,17"
-            os: ubuntu-18.04
-            install: clang-7
-          - toolset: clang
-            compiler: clang++-8
-            cxxstd: "03,11,14,17,2a"
-            os: ubuntu-20.04
-          - toolset: clang
-            compiler: clang++-9
-            cxxstd: "03,11,14,17,2a"
-            os: ubuntu-20.04
-          - toolset: clang
-            compiler: clang++-10
-            cxxstd: "03,11,14,17,2a"
-            os: ubuntu-20.04
-          - toolset: clang
-            cxxstd: "03,11,14,17,2a"
-            os: macos-10.15
+            travis_compiler: "clang++"
+          - name: "UBSAN=1 TOOLSET=clang CXXSTD=03,11,14,1z UBSA Job 11"
+            buildtype: "boost"
+            packages: ""
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "clang++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            ubsan: "1"
+            toolset: "clang"
+            cxxstd: "03,11,14,1z"
+            ubsan_options: "print_stacktrace=1"
+            travis_compiler: "clang++"
+          - name: "TOOLSET=clang CXXSTD=03,11,14,1z Job 12"
+            buildtype: "boost"
+            packages: " libc++-9-dev libc++abi-9-dev"
+            packages_to_remove: "libc++-dev libc++abi-dev"
+            os: "ubuntu-16.04"
+            cxx: "clang++"
+            sources: ""
+            llvm_os: "xenial"
+            llvm_ver: "9"
+            toolset: "clang"
+            cxxstd: "03,11,14,1z"
+            travis_compiler: "clang++-libc++"
+          - name: "UBSAN=1 TOOLSET=clang CXXSTD=03,11,14,1z UBSA Job 13"
+            buildtype: "boost"
+            packages: " libc++-9-dev libc++abi-9-dev"
+            packages_to_remove: "libc++-dev libc++abi-dev"
+            os: "ubuntu-16.04"
+            cxx: "clang++"
+            sources: ""
+            llvm_os: "xenial"
+            llvm_ver: "9"
+            ubsan: "1"
+            toolset: "clang"
+            cxxstd: "03,11,14,1z"
+            ubsan_options: "print_stacktrace=1"
+            travis_compiler: "clang++-libc++"
+          - name: "CMAKE=1 Job 15"
+            buildtype: "097d99d7d8-33ea46fe89"
+            packages: ""
+            packages_to_remove: ""
+            os: "ubuntu-16.04"
+            cxx: "g++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            cmake: "1"
 
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
 
     steps:
       - uses: actions/checkout@v2
+      - name: Check if running in container
+        if: matrix.container != ''
+        run: echo "GHA_CONTAINER=${{ matrix.container }}" >> $GITHUB_ENV
 
-      - name: Install packages
-        if: matrix.install
-        run: sudo apt install ${{matrix.install}}
-
-      - name: Setup Boost
+      - name: linux
+        shell: bash
+        env:
+          CXX: ${{ matrix.cxx }}
+          SOURCES: ${{ matrix.sources }}
+          LLVM_OS: ${{ matrix.llvm_os }}
+          LLVM_VER: ${{ matrix.llvm_ver }}
+          PACKAGES: ${{ matrix.packages }}
+          PACKAGES_TO_REMOVE: ${{ matrix.packages_to_remove }}
+          JOB_BUILDTYPE: ${{ matrix.buildtype }}
+          TOOLSET: ${{ matrix.toolset }}
+          CXXSTD: ${{ matrix.cxxstd }}
+          TRAVIS_COMPILER: ${{ matrix.travis_compiler }}
+          UBSAN: ${{ matrix.ubsan }}
+          UBSAN_OPTIONS: ${{ matrix.ubsan_options }}
+          LINKFLAGS: ${{ matrix.linkflags }}
+          CMAKE: ${{ matrix.cmake }}
+          TRAVIS_BRANCH: ${{ github.base_ref }}
         run: |
-          REF=${GITHUB_BASE_REF:-$GITHUB_REF}
-          BOOST_BRANCH=develop && [ "$REF" == "master" ] && BOOST_BRANCH=master || true
+          echo '==================================> SETUP'
+          BOOST_CI_ORG=boostorg BOOST_CI_BRANCH=master && wget https://github.com/$BOOST_CI_ORG/boost-ci/archive/$BOOST_CI_BRANCH.tar.gz && tar -xvf $BOOST_CI_BRANCH.tar.gz && mkdir -p .github &&  mv boost-ci-$BOOST_CI_BRANCH .github/boost-ci
+          echo '==================================> PACKAGES'
+          set -ex
+          echo "Before package removal or install"
+          whoami
+          dpkg -l
+          echo "Checking /usr/local"
+          ls -al /usr/local
+          echo "Checking clang"
+          which clang++ || true
+          clang++ --version || true
+          ls -al /etc/alternatives
+          ls -al /usr/bin/c*
+          echo "about to run sudo apt-get purge -y $PACKAGES_TO_REMOVE"
+          if [ -n "$PACKAGES_TO_REMOVE" ]; then sudo apt-get purge -y $PACKAGES_TO_REMOVE; fi
+          echo "about to run the equivalent of linux-cxx-install.sh"
+
+          set -ex
+          echo ">>>>> APT: REPO.."
+          for i in {1..3}; do sudo -E apt-add-repository -y "ppa:ubuntu-toolchain-r/test" && break || sleep 2; done
+          
+          if test -n "${LLVM_OS}" ; then
+              wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+              if test -n "${LLVM_VER}" ; then
+                  sudo -E apt-add-repository "deb http://apt.llvm.org/${LLVM_OS}/ llvm-toolchain-${LLVM_OS}-${LLVM_VER} main"
+              else
+                  # Snapshot (i.e. trunk) build of clang
+                  sudo -E apt-add-repository "deb http://apt.llvm.org/${LLVM_OS}/ llvm-toolchain-${LLVM_OS} main"
+              fi
+          fi
+          echo ">>>>> APT: UPDATE.."
+          sudo -E apt-get -o Acquire::Retries=3 update
+          if test -n "${SOURCES}" ; then
+              echo ">>>>> APT: INSTALL SOURCES.."
+              for SOURCE in $SOURCES; do
+                  sudo -E apt-add-repository ppa:$SOURCE
+              done
+          fi
+          echo ">>>>> APT: INSTALL ${PACKAGES}.."
+          sudo -E DEBIAN_FRONTEND=noninteractive apt-get -o Acquire::Retries=3 -y --no-install-suggests --no-install-recommends install ${PACKAGES}
+
+          echo "done with linux-cxx-install.sh"
+          echo "After package removal and install"
+          dpkg -l
+          echo "Checking /usr/local"
+          ls -al /usr/local
+          echo "Checking clang"
+          which clang++ || true
+          clang++ --version || true
+          ls -al /etc/alternatives
+          ls -al /usr/bin/c*
+          echo '==================================> INSTALL AND COMPILE'
+          set -e
+          set -x
+          export TRAVIS_BUILD_DIR=$(pwd)
+          export TRAVIS_BRANCH=${TRAVIS_BRANCH:-$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')}
+          export VCS_COMMIT_ID=$GITHUB_SHA
+          export GIT_COMMIT=$GITHUB_SHA
+          export REPO_NAME=$(basename $GITHUB_REPOSITORY)
+          export USER=$(whoami)
+          export CC=${CC:-gcc}
+          export PATH=~/.local/bin:/usr/local/bin:$PATH
+
+          if [ "$JOB_BUILDTYPE" == "boost" ]; then
+
+          echo '==================================> INSTALL'
+
+          BOOST_BRANCH=develop && [ "$TRAVIS_BRANCH" == "master" ] && BOOST_BRANCH=master || true
           cd ..
-          git clone -b $BOOST_BRANCH --depth 1 https://github.com/boostorg/boost.git boost-root
+          git clone -b $BOOST_BRANCH https://github.com/boostorg/boost.git boost-root
           cd boost-root
-          cp -r $GITHUB_WORKSPACE/* libs/$LIBRARY
           git submodule update --init tools/boostdep
-          python tools/boostdep/depinst/depinst.py --git_args "--jobs 3" $LIBRARY
+          git submodule update --init tools/cmake
+          cp -r $TRAVIS_BUILD_DIR/* libs/timer
+          python tools/boostdep/depinst/depinst.py timer
           ./bootstrap.sh
-          ./b2 -d0 headers
+          ./b2 headers
 
-      - name: Create user-config.jam
-        if: matrix.compiler
-        run: |
-          echo "using ${{matrix.toolset}} : : ${{matrix.compiler}} ;" > ~/user-config.jam
+          echo '==================================> SCRIPT'
 
-      - name: Run tests
-        run: |
-          cd ../boost-root
-          ./b2 -j3 libs/$LIBRARY/test toolset=${{matrix.toolset}} cxxstd=${{matrix.cxxstd}} variant=debug,release
+          echo "using $TOOLSET : : $TRAVIS_COMPILER ;" > ~/user-config.jam
+          ./b2 -j3 -l120 --verbose-test libs/timer/test toolset=$TOOLSET cxxstd=$CXXSTD variant=debug,release ${UBSAN:+cxxflags=-fsanitize=undefined cxxflags=-fno-sanitize-recover=undefined linkflags=-fsanitize=undefined debug-symbols=on} ${LINKFLAGS:+linkflags=$LINKFLAGS}
 
-  windows:
+          elif [ "$JOB_BUILDTYPE" == "097d99d7d8-33ea46fe89" ]; then
+
+          echo '==================================> INSTALL'
+
+          BOOST_BRANCH=develop && [ "$TRAVIS_BRANCH" == "master" ] && BOOST_BRANCH=master || true
+          cd ..
+          git clone -b $BOOST_BRANCH https://github.com/boostorg/boost.git boost-root
+          cd boost-root
+          git submodule update --init tools/boostdep
+          git submodule update --init tools/cmake
+          cp -r $TRAVIS_BUILD_DIR/* libs/timer
+          python tools/boostdep/depinst/depinst.py timer
+          ./bootstrap.sh
+          ./b2 headers
+
+          echo '==================================> SCRIPT'
+
+          mkdir __build__ && cd __build__
+          cmake -DBOOST_ENABLE_CMAKE=1 -DBoost_VERBOSE=1 -DBOOST_INCLUDE_LIBRARIES=timer ..
+          ctest --output-on-failure -R boost_timer
+
+          fi
+  osx:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - toolset: msvc-14.1
-            cxxstd: "14,17,latest"
-            addrmd: 32,64
-            os: windows-2016
-          - toolset: msvc-14.2
-            cxxstd: "14,17,latest"
-            addrmd: 32,64
-            os: windows-2019
-          - toolset: gcc
-            cxxstd: "03,11,14,17,2a"
-            addrmd: 64
-            os: windows-2019
+          - name: "TOOLSET=clang CXXSTD=03,11,14,1z Job 14"
+            buildtype: "boost"
+            packages: ""
+            os: "macos-10.15"
+            cxx: "clang++"
+            sources: ""
+            llvm_os: ""
+            llvm_ver: ""
+            xcode_version: 11.7
+            toolset: "clang"
+            cxxstd: "03,11,14,1z"
+            travis_compiler: "clang++"
 
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup Boost
-        shell: cmd
-        run: |
-          if "%GITHUB_BASE_REF%" == "" set GITHUB_BASE_REF=%GITHUB_REF%
-          set BOOST_BRANCH=develop
-          if "%GITHUB_BASE_REF%" == "master" set BOOST_BRANCH=master
-          cd ..
-          git clone -b %BOOST_BRANCH% --depth 1 https://github.com/boostorg/boost.git boost-root
-          cd boost-root
-          xcopy /s /e /q %GITHUB_WORKSPACE% libs\%LIBRARY%\
-          git submodule update --init tools/boostdep
-          python tools/boostdep/depinst/depinst.py --git_args "--jobs 3" %LIBRARY%
-          cmd /c bootstrap
-          b2 -d0 headers
+      - name: Set DEVELOPER_DIR
+        if: matrix.xcode_version != ''
+        run: echo "DEVELOPER_DIR=/Applications/Xcode_${{ matrix.xcode_version }}.app/Contents/Developer" >> $GITHUB_ENV
+      - name: Test DEVELOPER_DIR
+        run: echo $DEVELOPER_DIR
 
-      - name: Run tests
-        shell: cmd
+      - name: "osx"
+        shell: bash
+        env:
+          CXX: ${{ matrix.cxx }}
+          SOURCES: ${{ matrix.sources }}
+          LLVM_OS: ${{ matrix.llvm_os }}
+          LLVM_VER: ${{ matrix.llvm_ver }}
+          PACKAGES: ${{ matrix.packages }}
+          JOB_BUILDTYPE: ${{ matrix.buildtype }}
+          TOOLSET: ${{ matrix.toolset }}
+          CXXSTD: ${{ matrix.cxxstd }}
+          TRAVIS_COMPILER: ${{ matrix.travis_compiler }}
+          UBSAN: ${{ matrix.ubsan }}
+          UBSAN_OPTIONS: ${{ matrix.ubsan_options }}
+          LINKFLAGS: ${{ matrix.linkflags }}
+          CMAKE: ${{ matrix.cmake }}
+          TRAVIS_BRANCH: ${{ github.base_ref }}
         run: |
-          cd ../boost-root
-          b2 -j3 libs/%LIBRARY%/test toolset=${{matrix.toolset}} cxxstd=${{matrix.cxxstd}} address-model=${{matrix.addrmd}} variant=debug,release
+          echo '==================================> SETUP'
+          set -ex
+          uname -a
+          whoami
+          sudo mv /Library/Developer/CommandLineTools /Library/Developer/CommandLineTools.bck
+          BOOST_CI_ORG=boostorg BOOST_CI_BRANCH=master && /usr/local/bin/wget https://github.com/$BOOST_CI_ORG/boost-ci/archive/$BOOST_CI_BRANCH.tar.gz && tar -xvf $BOOST_CI_BRANCH.tar.gz && mkdir -p .github &&  mv boost-ci-$BOOST_CI_BRANCH .github/boost-ci
+          echo '==================================> PACKAGES'
+          echo "the equivalent of osx-cxx-install.sh would run here."
+
+          echo '==================================> INSTALL AND COMPILE'
+          set -e
+          set -x
+          export TRAVIS_BUILD_DIR=$(pwd)
+          export TRAVIS_BRANCH=${TRAVIS_BRANCH:-$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')}
+          export VCS_COMMIT_ID=$GITHUB_SHA
+          export GIT_COMMIT=$GITHUB_SHA
+          export REPO_NAME=$(basename $GITHUB_REPOSITORY)
+          export USER=$(whoami)
+          export CC=${CC:-gcc}
+          export PATH=~/.local/bin:/usr/local/bin:$PATH
+
+          if [ "$JOB_BUILDTYPE" == "boost" ]; then
+
+          echo '==================================> INSTALL'
+
+          BOOST_BRANCH=develop && [ "$TRAVIS_BRANCH" == "master" ] && BOOST_BRANCH=master || true
+          cd ..
+          git clone -b $BOOST_BRANCH https://github.com/boostorg/boost.git boost-root
+          cd boost-root
+          git submodule update --init tools/boostdep
+          git submodule update --init tools/cmake
+          cp -r $TRAVIS_BUILD_DIR/* libs/timer
+          python tools/boostdep/depinst/depinst.py timer
+          ./bootstrap.sh
+          ./b2 headers
+
+          echo '==================================> SCRIPT'
+
+          echo "using $TOOLSET : : $TRAVIS_COMPILER ;" > ~/user-config.jam
+          ./b2 -j3 -l120 --verbose-test libs/timer/test toolset=$TOOLSET cxxstd=$CXXSTD variant=debug,release ${UBSAN:+cxxflags=-fsanitize=undefined cxxflags=-fno-sanitize-recover=undefined linkflags=-fsanitize=undefined debug-symbols=on} ${LINKFLAGS:+linkflags=$LINKFLAGS}
+
+          fi
